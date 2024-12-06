@@ -18,6 +18,17 @@ export class NotificationsService {
   addSubscription(subscription: any) {
     this.subscriptions.push(subscription);
     console.log(`New subscription added: ${subscription.endpoint}`);
+  
+    // Send a confirmation notification to the subscriber
+    const payload = JSON.stringify({
+      title: 'Subscription Successful!',
+      body: 'You are now subscribed to notifications. 🎉',
+      icon: '/icon.png',
+    });
+  
+    this.sendNotification(subscription, payload).catch((error) =>
+      console.error('Error sending confirmation notification:', error.message),
+    );
   }
 
   private removeSubscription(subscription: any) {
