@@ -1,13 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { webPushConfig } from 'src/config/configuration';
 import * as webPush from 'web-push';
-
-// webPush.setVapidDetails(
-//   webPushConfig.email,
-//   webPushConfig.publicKey,
-//   webPushConfig.privateKey
-// );
 
 @Injectable()
 export class NotificationsService {
@@ -16,7 +10,6 @@ export class NotificationsService {
   constructor() {
     webPush.setVapidDetails(
       webPushConfig.email,
-      // `mailtos:${process.env.VAPID_EMAIL}`,
       process.env.VAPID_PUBLIC_KEY,
       process.env.VAPID_PRIVATE_KEY
     );
@@ -65,11 +58,48 @@ export class NotificationsService {
     return this.subscriptions;
   }
 
-  // Cron Job for periodic notifications
-  @Cron('*/10 * * * * *') // Runs every 10 seconds
-  async handleCron() {
-    console.log('Cron job executed at:', new Date().toISOString());
-    const payload = 'Periodic notification payload';
+  // Scheduled Notifications
+  @Cron('11 11 * * *') // Runs at 11:00 AM daily
+  async sendMorningNotification() {
+    console.log('Sending morning notification at:', new Date().toISOString());
+    const payload = JSON.stringify({
+      title: 'Good Morning!',
+      body: 'Feeling lucky today?',
+      icon: '/icon.png',
+    });
+    await this.sendNotificationToAll(payload);
+  }
+
+  @Cron('11 23 * * *') // Runs at 11:00 PM daily
+  async sendNightNotification() {
+    console.log('Sending night notification at:', new Date().toISOString());
+    const payload = JSON.stringify({
+      title: 'Good Night!',
+      body: 'Sweet dreams! 🌙',
+      icon: '/icon.png',
+    });
+    await this.sendNotificationToAll(payload);
+  }
+
+  // Random Notifications
+  @Cron(CronExpression.EVERY_HOUR) // Modify as needed for random frequency
+  async sendRandomNotification() {
+    const randomMessages = [
+      "You're doing amazing, keep it up!",
+      "Life is short, smile while you still have teeth!",
+      "You miss 100% of the shots you don't take!",
+      "Feeling lucky today?",
+    ];
+
+    const message = randomMessages[Math.floor(Math.random() * randomMessages.length)];
+    console.log('Sending random notification:', message);
+
+    const payload = JSON.stringify({
+      title: 'Surprise Message!',
+      body: message,
+      icon: '/icon.png',
+    });
+
     await this.sendNotificationToAll(payload);
   }
 }
