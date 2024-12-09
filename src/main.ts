@@ -11,7 +11,7 @@ async function bootstrap() {
   // Enable CORS with specific origin
   app.enableCors({
     // origin: process.env.ALLOWED_ORIGINS.split(','),
-    origin: ['http://notify2you.xtgem.com', 'http://127.0.0.1:5501', 'https://sweet-sunburst-77e346.netlify.app'],
+    origin: ['http://notify2you.xtgem.com', 'http://127.0.0.1:5501', 'https://sweet-sunburst-77e346.netlify.app/'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // If you need to send cookies, etc.
   });
