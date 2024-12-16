@@ -22,7 +22,7 @@ const vapidKeys = {
 };
 
 webPush.setVapidDetails(
-  'mailto:your-email@example.com',
+  'mailto:nevil.mali23799@gmail.com',
   vapidKeys.publicKey,
   vapidKeys.privateKey
 );
