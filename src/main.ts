@@ -7,7 +7,7 @@ async function bootstrap() {
 
   // Enable CORS with specific origin
   app.enableCors({
-    origin: ['http://127.0.0.1:5500','http://127.0.0.1:8080', 'http://localhost:4200', 'http://localhost:3001'], // Allow requests only from this origin
+    origin: ['https://sweet-sunburst-77e346.netlify.app/', 'http://localhost:3001'], // Allow requests only from this origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // If you need to send cookies, etc.
     allowedHeaders: 'Content-Type, Accept, Authorization'
