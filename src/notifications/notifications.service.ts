@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { webPushConfig } from 'src/config/configuration';
+import { webPushConfig } from 'src/config/constants';
 import * as webPush from 'web-push';
 
 webPush.setVapidDetails(
@@ -39,31 +39,29 @@ export class NotificationsService {
       }
     }
   }
-  
 
   public async sendNotificationToAll(payload: string) {
     if (this.subscriptions.length === 0) {
       console.error('No subscriptions available. Cannot send notifications.');
       return;
     }
-  
+
     for (const subscription of this.subscriptions) {
       console.log('Sending notification to:', subscription.endpoint);
       await this.sendNotification(subscription, payload);
     }
   }
-  
 
   public getSubscriptions(): any[] {
     return this.subscriptions;
   }
 
-//   // Cron Job for periodic notifications
-//   @Cron('*/10 * * * * *') // Runs every 10 seconds
-// async handleCron() {
-//   console.log('Cron job executed at:', new Date().toISOString());
-//   const payload = 'Periodic notification payload';
-//   await this.sendNotificationToAll(payload);
-// }
+  //   // Cron Job for periodic notifications
+  //   @Cron('*/10 * * * * *') // Runs every 10 seconds
+  // async handleCron() {
+  //   console.log('Cron job executed at:', new Date().toISOString());
+  //   const payload = 'Periodic notification payload';
+  //   await this.sendNotificationToAll(payload);
+  // }
 
 }
