@@ -12,6 +12,7 @@ export const webPushConfig = {
     CORS_ORIGINS: [
       'https://sweet-sunburst-77e346.netlify.app',
       'http://localhost:3001',
+      'https://qbuddy.netlify.app',
     ],
     WEB_PUSH: {
       PUBLIC_KEY: 'BJ_RCJTMyRUtQTDeIHDRS2m9JefdxS1lA_Ryo3MPhJ89I3yyG1ts9VdrIWuxuj2EAHwt70h43WqROsbF7qb53mA',
