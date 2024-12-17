@@ -15,44 +15,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
-const user_dto_1 = require("./model/user.dto");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
-    async signUp(createUserDto) {
-        return this.userService.create(createUserDto);
-    }
-    async signIn(body) {
-        try {
-            const user = await this.userService.signIn(body.email, body.password);
-            return {
-                message: 'Login successful',
-                user,
-            };
+    async getUserById(id) {
+        const user = await this.userService.getUserById(id);
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
         }
-        catch (error) {
-            return {
-                message: error.message || 'An error occurred',
-            };
-        }
+        return user;
     }
 };
 exports.UserController = UserController;
 __decorate([
-    (0, common_1.Post)('signup'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_dto_1.CreateUserDto]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "signUp", null);
-__decorate([
-    (0, common_1.Post)('signin'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "signIn", null);
+], UserController.prototype, "getUserById", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [user_service_1.UserService])

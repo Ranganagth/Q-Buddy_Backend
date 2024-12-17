@@ -1,6 +1,8 @@
-import { Controller, Post, Body, UseGuards, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Param, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtToken } from './jwt-token.model';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -37,5 +39,12 @@ export class AuthController {
     } catch (error) {
       return { message: error.message };
     }
+  }
+
+  @UseGuards(JwtAuthGuard) // Ensures token is validated
+  @Get('profile')
+  async getProfile(@Req() req: Request) {
+    const user = req.user; // This is set by the JwtStrategy
+    return { user };
   }
 }

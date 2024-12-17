@@ -9,8 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginDto = exports.CreateUserDto = void 0;
+exports.LoginDto = exports.CreateUserDto = exports.roles = void 0;
 const class_validator_1 = require("class-validator");
+var roles;
+(function (roles) {
+    roles["User"] = "User";
+    roles["Partner"] = "Partner";
+})(roles || (exports.roles = roles = {}));
 class CreateUserDto {
 }
 exports.CreateUserDto = CreateUserDto;
@@ -37,6 +42,12 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "contactNumber", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(roles),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "role", void 0);
 class LoginDto {
 }
 exports.LoginDto = LoginDto;

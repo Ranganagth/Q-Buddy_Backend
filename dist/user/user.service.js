@@ -20,17 +20,10 @@ let UserService = class UserService {
     constructor(userModel) {
         this.userModel = userModel;
     }
-    async create(createUserDto) {
-        const createdUser = new this.userModel(createUserDto);
-        return createdUser.save();
-    }
-    async signIn(email, password) {
-        const user = await this.userModel.findOne({ email, password });
+    async getUserById(userId) {
+        const user = await this.userModel.findById(userId).select('-password');
         if (!user) {
-            throw new Error('Invalid credentials');
-        }
-        if (!password) {
-            throw new Error('Invalid credentials');
+            throw new common_1.NotFoundException('User Not Found');
         }
         return user;
     }
