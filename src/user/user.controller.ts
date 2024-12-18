@@ -1,37 +1,48 @@
-import { Controller, Post, Body, Get, Req, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Req, NotFoundException, UseGuards, Param } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserService } from './user.service';
-// import { CreateUserDto } from './model/user.dto';
+import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) { }
 
-    // @Post('signup')
-    // async signUp(@Body() createUserDto: CreateUserDto) {
-    //     return this.userService.create(createUserDto);
-    // }
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getCurrentUser(@Req() req: Request) {
+    const userId = req.user?.userId;
+    if (!userId) {
+      throw new NotFoundException('User not found');
+    }
 
-    // @Post('signin')
-    // async signIn(@Body() body: { email: string, password: string }) {
-    //     try {
-    //         const user = await this.userService.signIn(body.email, body.password);
-    //         return {
-    //             message: 'Login successful',
-    //             user,
-    //         };
-    //     } catch (error) {
-    //         return {
-    //             message: error.message || 'An error occurred',
-    //         };
-    //     }
-    // }
+    const user = await this.userService.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-    @Get(':id')
+    const { name, email } = user;
+    return { name, email };
+  } catch(error) {
+    console.error('Error in getCurrentUser:', error);
+    throw error;
+  }
+
+  @Get('byId/:id')
   async getUserById(@Param('id') id: string) {
     const user = await this.userService.getUserById(id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user;
+  }
+
+  @Get('getAllUsers')
+  async getAllUsers() {
+    return await this.userService.getUsersByRole('User');
+  }
+
+  @Get('getAllPartners')
+  async getAllPartners() {
+    return await this.userService.getUsersByRole('Partner');
   }
 }

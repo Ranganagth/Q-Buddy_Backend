@@ -24,11 +24,24 @@ export class UserService {
     //     return user;
     // }
 
-    async getUserById(userId: string): Promise<User> {
-        const user = await this.userModel.findById(userId).select('-password');
-        if (!user) {
-            throw new NotFoundException('User Not Found');
+    async getUserById(userId: string) {
+        try {
+            const user = await this.userModel.findById(userId).exec();
+            return user;
+        } catch (error) {
+            throw new NotFoundException('User not found');
         }
-        return user;
+    }
+
+    async getUsersByRole(role: string): Promise<Pick<User, '_id' | 'name' | 'email' | 'contactNumber' | 'role'>[]> {
+        try {
+            return await this.userModel
+                .find({ role })
+                .select('_id name email contactNumber role') // Explicitly select required fields
+                .lean()
+                .exec();
+        } catch (error) {
+            throw new Error(`Error fetching ${role}s: ${error.message}`);
+        }
     }
 }

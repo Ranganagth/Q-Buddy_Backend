@@ -21,11 +21,25 @@ let UserService = class UserService {
         this.userModel = userModel;
     }
     async getUserById(userId) {
-        const user = await this.userModel.findById(userId).select('-password');
-        if (!user) {
-            throw new common_1.NotFoundException('User Not Found');
+        try {
+            const user = await this.userModel.findById(userId).exec();
+            return user;
         }
-        return user;
+        catch (error) {
+            throw new common_1.NotFoundException('User not found');
+        }
+    }
+    async getUsersByRole(role) {
+        try {
+            return await this.userModel
+                .find({ role })
+                .select('_id name email contactNumber role')
+                .lean()
+                .exec();
+        }
+        catch (error) {
+            throw new Error(`Error fetching ${role}s: ${error.message}`);
+        }
     }
 };
 exports.UserService = UserService;
