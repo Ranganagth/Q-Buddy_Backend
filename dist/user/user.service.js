@@ -20,19 +20,26 @@ let UserService = class UserService {
     constructor(userModel) {
         this.userModel = userModel;
     }
-    async create(createUserDto) {
-        const createdUser = new this.userModel(createUserDto);
-        return createdUser.save();
+    async getUserById(userId) {
+        try {
+            const user = await this.userModel.findById(userId).exec();
+            return user;
+        }
+        catch (error) {
+            throw new common_1.NotFoundException('User not found');
+        }
     }
-    async signIn(email, password) {
-        const user = await this.userModel.findOne({ email, password });
-        if (!user) {
-            throw new Error('Invalid credentials');
+    async getUsersByRole(role) {
+        try {
+            return await this.userModel
+                .find({ role })
+                .select('_id name email contactNumber role')
+                .lean()
+                .exec();
         }
-        if (!password) {
-            throw new Error('Invalid credentials');
+        catch (error) {
+            throw new Error(`Error fetching ${role}s: ${error.message}`);
         }
-        return user;
     }
 };
 exports.UserService = UserService;

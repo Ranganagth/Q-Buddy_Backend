@@ -1,17 +1,18 @@
 import { UserService } from './user.service';
-import { CreateUserDto } from './model/user.dto';
+import { Request } from 'express';
 export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
-    signUp(createUserDto: CreateUserDto): Promise<import("./model/user.schema").User>;
-    signIn(body: {
+    getCurrentUser(req: Request): Promise<{
+        name: string;
         email: string;
-        password: string;
-    }): Promise<{
-        message: string;
-        user: any;
-    } | {
-        message: any;
-        user?: undefined;
     }>;
+    catch(error: any): void;
+    getUserById(id: string): Promise<import("mongoose").Document<unknown, {}, import("./model/user.schema").User> & import("./model/user.schema").User & Required<{
+        _id: string;
+    }> & {
+        __v: number;
+    }>;
+    getAllUsers(): Promise<Pick<import("./model/user.schema").User, "name" | "email" | "contactNumber" | "role" | "_id">[]>;
+    getAllPartners(): Promise<Pick<import("./model/user.schema").User, "name" | "email" | "contactNumber" | "role" | "_id">[]>;
 }

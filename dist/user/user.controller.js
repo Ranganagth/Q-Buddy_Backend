@@ -14,45 +14,70 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const user_service_1 = require("./user.service");
-const user_dto_1 = require("./model/user.dto");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
-    async signUp(createUserDto) {
-        return this.userService.create(createUserDto);
+    async getCurrentUser(req) {
+        const userId = req.user?.userId;
+        if (!userId) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        const user = await this.userService.getUserById(userId);
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        const { name, email } = user;
+        return { name, email };
     }
-    async signIn(body) {
-        try {
-            const user = await this.userService.signIn(body.email, body.password);
-            return {
-                message: 'Login successful',
-                user,
-            };
+    catch(error) {
+        console.error('Error in getCurrentUser:', error);
+        throw error;
+    }
+    async getUserById(id) {
+        const user = await this.userService.getUserById(id);
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
         }
-        catch (error) {
-            return {
-                message: error.message || 'An error occurred',
-            };
-        }
+        return user;
+    }
+    async getAllUsers() {
+        return await this.userService.getUsersByRole('User');
+    }
+    async getAllPartners() {
+        return await this.userService.getUsersByRole('Partner');
     }
 };
 exports.UserController = UserController;
 __decorate([
-    (0, common_1.Post)('signup'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "signUp", null);
-__decorate([
-    (0, common_1.Post)('signin'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('me'),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "signIn", null);
+], UserController.prototype, "getCurrentUser", null);
+__decorate([
+    (0, common_1.Get)('byId/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getUserById", null);
+__decorate([
+    (0, common_1.Get)('getAllUsers'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getAllUsers", null);
+__decorate([
+    (0, common_1.Get)('getAllPartners'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getAllPartners", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [user_service_1.UserService])

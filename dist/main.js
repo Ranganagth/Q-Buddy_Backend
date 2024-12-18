@@ -3,20 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app/app.module");
 const webPush = require("web-push");
+const constants_1 = require("./config/constants");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: ['http://127.0.0.1:5500', 'http://127.0.0.1:8080', 'http://localhost:4200', 'http://localhost:3001'],
+        origin: constants_1.APP_CONFIG.CORS_ORIGINS,
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
         allowedHeaders: 'Content-Type, Accept, Authorization'
     });
     await app.listen(3000);
 }
-const vapidKeys = {
-    publicKey: 'BJ_RCJTMyRUtQTDeIHDRS2m9JefdxS1lA_Ryo3MPhJ89I3yyG1ts9VdrIWuxuj2EAHwt70h43WqROsbF7qb53mA',
-    privateKey: 'AfjNKSeJPBDCswm-W_TxOG6jbpfg9XIU8YbqdjcVhy0',
-};
-webPush.setVapidDetails('mailto:your-email@example.com', vapidKeys.publicKey, vapidKeys.privateKey);
+webPush.setVapidDetails(constants_1.APP_CONFIG.WEB_PUSH.CONTACT_EMAIL, constants_1.APP_CONFIG.WEB_PUSH.PUBLIC_KEY, constants_1.APP_CONFIG.WEB_PUSH.PRIVATE_KEY);
 bootstrap();
 //# sourceMappingURL=main.js.map

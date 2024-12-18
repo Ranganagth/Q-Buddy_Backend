@@ -14,12 +14,19 @@ const notifications_module_1 = require("../notifications/notifications.module");
 const schedule_1 = require("@nestjs/schedule");
 const mongoose_1 = require("@nestjs/mongoose");
 const user_module_1 = require("../user/user.module");
+const constants_1 = require("../config/constants");
+const auth_module_1 = require("../auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [mongoose_1.MongooseModule.forRoot('mongodb+srv://QBuddy:Qbuddy%40123@q-buddy.3rr4w.mongodb.net/QBuddy'), schedule_1.ScheduleModule.forRoot(), notifications_module_1.NotificationsModule, user_module_1.UserModule],
+        imports: [mongoose_1.MongooseModule.forRoot(constants_1.APP_CONFIG.DATABASE.MONGODB_URI),
+            schedule_1.ScheduleModule.forRoot(),
+            notifications_module_1.NotificationsModule,
+            user_module_1.UserModule,
+            auth_module_1.AuthModule,
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

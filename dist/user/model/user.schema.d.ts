@@ -4,25 +4,29 @@ export declare const UserSchema: Schema<any, import("mongoose").Model<any, any, 
     email: string;
     password: string;
     contactNumber: string;
+    role: string;
 }, Document<unknown, {}, import("mongoose").FlatRecord<{
     name: string;
     email: string;
     password: string;
     contactNumber: string;
+    role: string;
 }>> & import("mongoose").FlatRecord<{
     name: string;
     email: string;
     password: string;
     contactNumber: string;
+    role: string;
 }> & {
     _id: import("mongoose").Types.ObjectId;
 } & {
     __v: number;
 }>;
 export interface User extends Document {
-    id: string;
+    _id: string;
     name: string;
     email: string;
     password: string;
     contactNumber: string;
+    role: string;
 }
