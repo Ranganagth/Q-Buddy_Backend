@@ -13,13 +13,13 @@ import { APP_CONFIG } from 'src/config/constants';
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: APP_CONFIG.JWT.JWT_SECRET, 
+      secret: APP_CONFIG.JWT.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtAuthGuard],
-  exports: [AuthService, JwtAuthGuard]
+  exports: [AuthService]
 })
 export class AuthModule {}
